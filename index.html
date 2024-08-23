@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-br" data-bs-theme="auto">
+  <head><script src="assets/js/color-modes.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.122.0">
+    
+  <title>Calculadora</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/jumbotron/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
+
+ <style>
+      body {
+        font-family: "Montserrat", sans-serif;
+      }
+  </style>
+
+  </head>
+  <body>
+
+  <main style="text-align: center;">
+      <div class="container py-4">
+        <header class="pb-3 mb-4 border-bottom text-center">
+          <span class="fs-4">Calculadora CDI</span>
+        </header>
+
+        <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+          <div class="container-fluid py-5 form-container">
+            <h1 class="display-5 fw-bold text-center">Simulação de Renda Fixa</h1>
+            
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-8 col-lg-6">
+                <div class="mb-3">
+                  <label for="valorAplicacao" class="form-label">Valor da aplicação:</label>
+                  <input type="number" name="quantity" step="0.01" min="0" class="form-control" id="valorAplicacao">
+                </div>
+                <div class="mb-3">
+                  <label for="meses" class="form-label">Prazo em meses:</label>
+                  <input type="number" class="form-control" id="meses">
+                </div>
+                <div class="mb-3">
+                  <label for="cdi" class="form-label">% do CDI:</label>
+                  <input type="number" class="form-control" id="cdi">
+                </div>
+                <div class="mb-3">
+                  <label for="ir" class="form-label">% do IR:</label>
+                  <input type="number" class="form-control" id="ir">
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                  <button class="btn btn-success me-md-2" onclick="calcular()" type="button">Calcular</button>
+                  <button class="btn btn-secondary" onclick="limpar()" type="button">Limpar</button>
+                </div>
+
+                <h3 class="text-success mt-3 fw-bold" id="valor"></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="pt-1 text-body-secondary border-top col-12 mb-3 mx-auto">
+          Rodrigues - 2024
+        </footer>
+
+      </div>
+    </main>
+
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+
+<script>
+      
+ function calcular() {
+    let valorAplicacao = parseFloat(document.getElementById("valorAplicacao").value);
+    let meses = parseInt(document.getElementById("meses").value);
+    let percentualCDI = parseFloat(document.getElementById("cdi").value);
+    let ir = parseFloat(document.getElementById("ir").value);
+
+    const cdiAnual = 10.4;
+
+    if (isNaN(valorAplicacao) || isNaN(meses) || isNaN(percentualCDI) || isNaN(ir) || meses <= 0 || valorAplicacao <= 0) {
+        document.getElementById("valor").innerHTML = "Por favor, insira valores válidos.";
+        return;
+    }
+    
+    let taxaTituloAnual = (cdiAnual * percentualCDI) / 100;
+    let taxaMensal = Math.pow(1 + (taxaTituloAnual / 100), 1 / 12) - 1;   
+    let valorFuturo = valorAplicacao * Math.pow(1 + taxaMensal, meses); 
+    let rendimentoBruto = valorFuturo - valorAplicacao; 
+    let imposto = rendimentoBruto * (ir / 100);  
+    let rendimentoLiquido = rendimentoBruto - imposto;
+    
+    document.getElementById("valor").innerHTML = `Em `+ meses +` mes(es) você terá<br>R$ ${rendimentoLiquido.toFixed(2)}.`;
+}
+
+function limpar() {
+        document.getElementById("valorAplicacao").value = "";
+        document.getElementById("meses").value = "";
+        document.getElementById("cdi").value = "";
+        document.getElementById("ir").value = "";
+        document.getElementById("valor").innerHTML = "";
+}
+
+</script>
+</body>
+</html>
