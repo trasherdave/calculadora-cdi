@@ -58,7 +58,8 @@
                   <button class="btn btn-secondary" onclick="limpar()" type="button">Limpar</button>
                 </div>
 
-                <h3 class="text-success mt-3 fw-bold" id="valor"></h3>
+                <h3 class="text-success mt-3 fw-bold" id="valorTotal"></h3>
+                <h5 class="text-success mt-3 fw-bold" id="valor"></h5>
               </div>
             </div>
           </div>
@@ -84,7 +85,7 @@
     const cdiAnual = 10.4;
 
     if (isNaN(valorAplicacao) || isNaN(meses) || isNaN(percentualCDI) || isNaN(ir) || meses <= 0 || valorAplicacao <= 0) {
-        document.getElementById("valor").innerHTML = "Por favor, insira valores válidos.";
+        document.getElementById("valorTotal").innerHTML = "Por favor, insira valores válidos.";
         return;
     }
     
@@ -93,9 +94,21 @@
     let valorFuturo = valorAplicacao * Math.pow(1 + taxaMensal, meses); 
     let rendimentoBruto = valorFuturo - valorAplicacao; 
     let imposto = rendimentoBruto * (ir / 100);  
-    let rendimentoLiquido = rendimentoBruto - imposto;
+    let rendimentoLiquido = (rendimentoBruto - imposto);
+    let rendimentoTotal = (rendimentoBruto - imposto) + valorAplicacao;
     
-    document.getElementById("valor").innerHTML = `Em `+ meses +` mes(es) você terá<br>R$ ${rendimentoLiquido.toFixed(2)}.`;
+
+    const formatarMoeda = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2
+    });
+
+    const valotLiquidoFormatado = formatarMoeda.format(rendimentoLiquido);
+    const valorTotalFormatado = formatarMoeda.format(rendimentoTotal);
+
+    document.getElementById("valorTotal").innerHTML = `Em ${meses} mes(es) você teria:<br>${valorTotalFormatado}`;
+    document.getElementById("valor").innerHTML = `Rendimento líquido: ${valotLiquidoFormatado}`;
 }
 
 function limpar() {
@@ -103,6 +116,7 @@ function limpar() {
         document.getElementById("meses").value = "";
         document.getElementById("cdi").value = "";
         document.getElementById("ir").value = "";
+        document.getElementById("valorTotal").innerHTML = "";
         document.getElementById("valor").innerHTML = "";
 }
 
